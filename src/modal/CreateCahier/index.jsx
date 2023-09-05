@@ -20,11 +20,19 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   phone_number: yup.string().required(),
   password: yup.string().min(5).max(16).required(),
+  inn: yup.string().required(),
 });
 
 const CreateCashier = () => {
   const [type, setType] = useState(true)
   const [store, setStore] = useState({name: ''})
+
+  const [storeCash, setStoreCash] = useState({
+    storeValue: 'Магазины',
+    storeObject: {},
+    isStore: false,
+  })
+
   const [permissions, setPermission] = useState({
     isPermission: false,
     allowCreateProduct: true,
@@ -39,6 +47,8 @@ const CreateCashier = () => {
     allowCheckProduct: true,
   })
   const dispatch = useDispatch()
+
+  const [file, setFile] = useState({})
 
   const {
     handleSubmit,
@@ -68,26 +78,35 @@ const CreateCashier = () => {
         },
       })
 
+      const formData = new FormData()
+
+      formData.append('role', response?.data?.id)
+      formData.append('fullname', e.fullname)
+      formData.append('email', e.email)
+      formData.append('phone_number', e.phone_number)
+      formData.append('inn', e.inn)
+      formData.append('password', e.password)
+      formData.append('user_avatar', file)
+
+
       const result = await createUser({
         token: localStorage.getItem('accessToken'),
-        data: {
-          role: response?.data?.id,
-          ...e,
-        },
+        data: formData,
       })
 
-      await connectUser({
-        token: localStorage.getItem('accessToken'),
-        data: {
-          user_id: result?.data?.id,
-          branch_ids: [store?.id],
-        },
-      })
+      if(result) {
+        await connectUser({
+          token: localStorage.getItem('accessToken'),
+          data: {
+            user_id: result?.data?.id,
+            branch_ids: [storeCash?.storeObject?.id],
+          },
+        })
+      }
 
 
       reset()
       setStore({name: ''})
-      setStoresData([])
     } catch (error) {
       console.log(error)
     }
@@ -101,29 +120,17 @@ const CreateCashier = () => {
     token: localStorage.getItem('accessToken'),
   })
 
-  const storeValue = useDebounce(store.name)
-  const [storesData, setStoresData] = useState([])
+  
 
-  useEffect(() => {
-    const isMatch = storesData?.find(item => item.name === store.name)
-
-    if(isMatch){
-      setStoresData([])
-    }else{
-      setStoresData(data?.results.filter(item => item.name.toLowerCase().includes(storeValue.toLowerCase())))
-    }
-
-  }, [storeValue, data?.results])
-
-  const storePicker = (elem) => {
-    setStore(elem)
+  const handleStore = (val) => {
+    setStoreCash((prev) => ({...prev, storeValue: val?.name, storeObject: val , isStore: !storeCash.isStore}))
   }
 
   return (
     <div className={cls['workers']}>
       <div className={cls['workers-head']}>
         <button 
-          id={cls[isValid && store.name ? 'disabled' : '']}
+          id={cls[isValid && storeCash.storeObject?.name ? 'disabled' : '']}
           onClick={handleSubmit(createAdminHandler)} 
           className={cls['workers-saver']}
         >Сохранить</button>
@@ -254,7 +261,7 @@ const CreateCashier = () => {
               <label className={cls['input-file']}>
                 <input
                   accept="image/png, image/jpeg"
-                  // onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => setFile(e.target.files[0])}
                   type="file"
                   name="file"
                 />
@@ -264,17 +271,16 @@ const CreateCashier = () => {
                 </span>
               </label>
             </div>
-            <div className={cls['cashier-stores']}>
+            <div className={cls['stores']}>
               <p>Магазины <button>?</button></p>
               <div>
-                <input value={store.name} onChange={(e) => setStore((prev) => ({...prev, name: e.target.value}))} type="text" />
-                {storesData?.length > 0 && storeValue !== '' && (
-                  <ul>
-                    {storesData.map(item => (
-                      <li onClick={() => storePicker(item)} key={item.id}>{item.name}</li>
-                    ))}
-                  </ul>
-                )}
+                <span onClick={() => setStoreCash((prev) => ({...prev, isStore: !storeCash.isStore}))}>{storeCash.storeValue}</span>
+                {storeCash.isStore &&  <ul className={cls['drop']}>
+                  {
+                    data?.results?.map((item, i) => 
+                      <p key={i} onClick={() => handleStore(item)}>{item.name}</p>)
+                  }
+                </ul>}
               </div>
             </div>
             <div className={cls['cashier-input']}>
@@ -287,7 +293,7 @@ const CreateCashier = () => {
             </div>
             <div className={cls['cashier-input']}>
               <p>ИНН</p>
-              <input type="text" />
+              <input type="text" {...register('inn')}/>
             </div>
             <div className={cls['cashier-input']}>
               <p>Пароль сотрудника <span>*</span></p>

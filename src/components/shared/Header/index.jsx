@@ -1,13 +1,58 @@
 import { routeTitleHandler } from '../../../utils/routesTitleHandler';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { appRoutesPath } from '../../../constants';
+import { appRoutesPath, userStatus } from '../../../constants';
 import logo from '../../../assets/logo.svg'
 import cls from './header.module.scss';
+import { axiosInstance } from '../../../axios';
+import { setUserStatus } from '../../../store/slices/userSlice';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const Header = () => {
   const location = useLocation()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const access = localStorage.getItem('accessToken')
+  const [user, setUser] = useState({})
 
+  const getUserInfo = async (access) => {
+    const response = await axiosInstance.get('accounts/users/get_userinfo' , {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    })
+    
+    const roleResponse = await axiosInstance.get(`accounts/roles/${response?.data?.role?.id}/` , {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    })
+
+    dispatch(setUserStatus(
+      roleResponse?.data?.name === 'super admin' ? userStatus.OWNER : 
+        roleResponse?.data?.name === 'admin' ? userStatus.ADMIN : 
+          roleResponse?.data?.name === 'casher' ? userStatus.CASHIER : 
+            roleResponse?.data?.name === 'storekeeper' ? userStatus.STORE_KEEPER : '',
+    ))
+
+    return response
+  }
+
+  getUserInfo(access)
+    .then(res => setUser(res.data))
+
+  function setRole(item) {
+    if(item?.role?.name === 'super admin') {
+      return 'Владелец'
+    } else if (item?.role?.name === 'admin') {
+      return 'Администратор'
+    } else if (item?.role?.name === 'storekeeper') {
+      return 'Кладовщик'
+    } else if (item?.role?.name === 'casher'){
+      return 'Кассир'
+    }
+  }
+  
   return (
     <div className={cls['header']}>
       <div className={cls['header-left']}>
@@ -19,14 +64,14 @@ const Header = () => {
         </div>
       </div>
       <div className={cls['header-right']}>
-        <div className={cls['header-right__user']}>
-          <img 
-            src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-
-            during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000" 
-            alt="user-icon" />
+        <div className={cls['header-right__user']} onClick={() => {
+          localStorage.clear()
+          window.location.reload()
+        }}>
+          {user?.user_avatar && <img src={user?.user_avatar} alt="" />}
           <div>
-            <h5>Asad Halmatov</h5>
-            <p>Владелец</p>
+            <h5>{user?.fullname}</h5>
+            <p>{setRole(user)}</p>
           </div>
         </div>  
       </div>

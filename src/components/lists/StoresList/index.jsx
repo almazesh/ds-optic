@@ -7,15 +7,28 @@ import cls from './storesList.module.scss';
 import { useDispatch } from 'react-redux';
 import { BiTrash } from 'react-icons/bi'
 import Loader from '../../elements/Loader';
+import { axiosInstance } from '../../../axios';
 
 const StoresList = () => {
   const dispatch = useDispatch()
 
-  const { data, isLoading } = useGetStoresQuery({token: localStorage.getItem('accessToken')})
+  const { data, isLoading, refetch } = useGetStoresQuery({token: localStorage.getItem('accessToken')})
 
-  const modalHandler = (type) => {
+  const modalHandler = (type , id) => {
+    localStorage.setItem('storeId', Number(id))
     dispatch(setModal())
     dispatch(setModalType(type))
+  }
+
+  const deleteStore = async (id) => {
+    try {
+      await axiosInstance.delete(`/branches/branches/${id}/`)
+
+      refetch()
+
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -35,8 +48,8 @@ const StoresList = () => {
             </div>
             <div className={cls['stores-child-button']}>
               <div>
-                <span onClick={() => modalHandler(modalTypes.EDIT_STORE_TYPE)}><FaRegEdit/> Редактировать</span>  
-                <button><BiTrash/></button>
+                <span onClick={() => modalHandler(modalTypes.EDIT_STORE_TYPE, item?.id)}><FaRegEdit/> Редактировать</span>  
+                <button onClick={() => deleteStore(item?.id)}><BiTrash/></button>
               </div>
             </div>
           </div>

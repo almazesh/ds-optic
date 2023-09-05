@@ -8,7 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useCreateStoreMutation } from '../../store/query/storesQuery';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { axiosInstance } from '../../axios';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -16,16 +17,25 @@ const schema = yup.object().shape({
   description: yup.string().required(),
 });
 
+
+
 const CreateStore = () => {
+
+
   const dispatch = useDispatch()
   const [taxes, setTaxes] = useState({
     taxesValue: 'налоги',
     isTaxes: false,
   })
+  const [getTaxes, setGetTaxes] = useState({})
 
   const modalCloser = () => {
     dispatch(setModal())
   }
+
+  React.useEffect(() => {
+    axiosInstance.get('/settings/taxes').then(res => setGetTaxes(res.data))
+  }, [])
 
   const {
     handleSubmit,
@@ -39,13 +49,11 @@ const CreateStore = () => {
 
   const [createStore, { data }] = useCreateStoreMutation()
 
-  console.log(data);  
-
   const createStoreHandler = async (e) => {
     try {
       await createStore({
         token: localStorage.getItem('accessToken'),
-        data: {...e, taxes: { taxes: taxes.taxesValue }},
+        data: {...e,  taxes: Number(taxes.taxesValue)},
       })
 
       reset()
@@ -83,8 +91,10 @@ const CreateStore = () => {
             <div>
               <span onClick={() => setTaxes((prev) => ({...prev, isTaxes: !taxes.isTaxes}))}>{taxes.taxesValue}</span>
               {taxes.isTaxes &&  <ul className={cls['drop']}>
-                <p onClick={() => handleTaxes('test 1')}>test 1</p>
-                <p onClick={() => handleTaxes('test 2')}>test 2</p>
+                {
+                  getTaxes?.results?.map((item, i) => 
+                    <p key={i} onClick={() => handleTaxes(item?.id)}>{item.taxes}</p>)
+                }
               </ul>}
             </div>
           </div>

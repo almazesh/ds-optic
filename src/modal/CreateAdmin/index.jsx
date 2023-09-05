@@ -3,7 +3,7 @@ import { setModal, setModalType } from '../../store/slices/modalSlice'
 import cls from './createAdmin.module.scss'
 import { useDispatch } from 'react-redux'
 import { GrClose } from 'react-icons/gr'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
@@ -12,6 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { modalTypes } from '../../constants'
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { axiosInstance } from '../../axios'
+import { useGetStoresQuery } from '../../store/query/storesQuery'
 
 const schema = yup.object().shape({
   fullname: yup.string().required(),
@@ -22,6 +24,13 @@ const schema = yup.object().shape({
 
 const CreateAdmin = () => {
   const [type, setType] = useState(true)
+  const [file, setFile] = useState({})
+ 
+  const [store, setStore] = useState({
+    storeValue: 'Магазины',
+    storeObject: {},
+    isStore: false,
+  })
   const [permissions, setPermission] = useState({
     isPermission: false,
     allowCreateProduct: true,
@@ -51,6 +60,8 @@ const CreateAdmin = () => {
   const [createRole] = useCreateRoleMutation()
   const [createUser] = useCreateUserMutation()
 
+  const { data, isLoading, refetch } = useGetStoresQuery({token: localStorage.getItem('accessToken')})
+
   const createAdminHandler = async (e) => {
     // eslint-disable-next-line no-unused-vars
     const { isPermission, ...newArr } = permissions;
@@ -64,22 +75,43 @@ const CreateAdmin = () => {
         },
       })
 
+      const formData = new FormData()
+
+      formData.append('role', response?.data?.id)
+      formData.append('fullname', e.fullname)
+      formData.append('email', e.email)
+      formData.append('phone_number', e.phone_number)
+      formData.append('password', e.password)
+      formData.append('user_avatar', file)
+
+
       const result = await createUser({
         token: localStorage.getItem('accessToken'),
-        data: {
-          role: response?.data?.id,
-          ...e,
-        },
+        data: formData,
       })
 
+
+      if(result) {
+        await axiosInstance.post('/branches/branches/add_user_to_branches/', {
+          user_id: result.data?.id,
+          branch_ids: [store?.storeObject?.id],
+        })
+      }
+      refetch()
       reset()
       } catch (error) {
       console.log(error)
     }
   }
 
+  console.log(file)
+
   const typeChanger = (key) => {
     setPermission((prev) => ({...prev, [key]: !permissions[key]}))
+  }
+
+  const handleStore = (val) => {
+    setStore((prev) => ({...prev, storeValue: val?.name, storeObject: val , isStore: !store.isStore}))
   }
 
   return (
@@ -207,14 +239,14 @@ const CreateAdmin = () => {
 
             <div className={cls['admin-input']}>
               <p>Имя и фамилия сотрудника <span>*</span></p>
-              <input {...register('email')} type="email" />
+              <input {...register('fullname')} type="email" />
             </div>
             <div className={cls['admin-upload']}>
               <h3>Фотография</h3>
               <label className={cls['input-file']}>
                 <input
                   accept="image/png, image/jpeg"
-                  // onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => setFile(e.target.files[0])}
                   type="file"
                   name="file"
                 />
@@ -223,6 +255,18 @@ const CreateAdmin = () => {
                   или перетащите его мышью
                 </span>
               </label>
+            </div>
+            <div className={cls['stores']}>
+              <p>Магазины <button>?</button></p>
+              <div>
+                <span onClick={() => setStore((prev) => ({...prev, isStore: !store.isStore}))}>{store.storeValue}</span>
+                {store.isStore &&  <ul className={cls['drop']}>
+                  {
+                    data?.results?.map((item, i) => 
+                      <p key={i} onClick={() => handleStore(item)}>{item.name}</p>)
+                  }
+                </ul>}
+              </div>
             </div>
             <div className={cls['admin-input']}>
               <p>Email <span>*</span></p>

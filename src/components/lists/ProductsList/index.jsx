@@ -23,6 +23,8 @@ const ProductsList = () => {
     token: localStorage.getItem('accessToken'),
   })
 
+  console.log(storeData)
+
   return (
     <div className={cls['table']}>
       {status === userStatus.OWNER ? 
@@ -34,8 +36,27 @@ const ProductsList = () => {
             <div id={cls['no-hover']} className={cls['table-naming']}>
               <span>Наименование</span>
             </div>
+            <div className={cls['table-code']}>
+              <span>код</span>
+            </div>
+            <div className={cls['table-article']}>
+              <span>Артикул</span>
+            </div>
+            <div className={cls['table-changer']}>
+              <span>Ед. изм.</span>
+            </div>
+            <div className={cls['table-price']}>
+              <span>Цена продажи</span>
+            </div>
+            <div className={cls['table-discount']}>
+              <span>Скидка, %</span>
+            </div>
+            
+            <div className={cls['table-rest']}>
+              <span>Остатки</span>
+            </div>
           </div>
-          {storeData?.results.map(item => (
+          {storeData?.results?.map(item => (
             <div key={item.id} className={cls['table-item']}>
               <div className={cls['table-head-checkbox']}>
                 <span></span>

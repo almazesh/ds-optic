@@ -7,6 +7,8 @@ import cls from './userHistory.module.scss';
 import { useDispatch } from 'react-redux';
 import { GrClose } from 'react-icons/gr'
 import { useState } from 'react';
+import { useGetUsersQuery } from '../../store/query/usersQuery';
+
 
 const UserHistory = () => {
   const [drop, setDrop] = useState({
@@ -14,7 +16,29 @@ const UserHistory = () => {
     secondDrop: false,
   })
 
+  const { data, isLoading } = useGetUsersQuery({
+    token: localStorage.getItem('accessToken'),
+  })
+
+  const userId = +localStorage.getItem('userId')
+
   const dispatch = useDispatch()
+
+  const foundedUser = data && data?.find(item => item?.id === userId)
+
+  console.log(foundedUser)
+
+  function setRole(item) {
+    if(item?.role?.name === 'super admin') {
+      return 'Владелец'
+    } else if (item?.role?.name === 'admin') {
+      return 'Администратор'
+    } else if (item?.role?.name === 'storekeeper') {
+      return 'Кладовщик'
+    } else {
+      return 'Кассир'
+    }
+  }
 
   return (
     <div className={cls['history']}>
@@ -27,14 +51,14 @@ const UserHistory = () => {
       <div className={cls['history-body']}>
         <div className={cls['history-user']}>
           <div className={cls['history-info']}>
-            <h3>Asad Halmatov</h3>
-            <span>Владелец</span>
+            <h3>{foundedUser?.fullname}</h3>
+            <span>{setRole(foundedUser)}</span>
           </div>
           <p>Создан 14 января</p>
           <div className={cls['history-links']}>
             <label>
               <HiOutlineMail/>
-              <span>buckaroonanzai@gmail.com</span>
+              <span>{foundedUser?.email}</span>
             </label>
           </div>
         </div>

@@ -34,6 +34,7 @@ export const usersQuery = createApi({
         method: 'POST',
         body: data,
         headers: {
+        
           Authorization: `Bearer ${token}`,
         },
       }),
