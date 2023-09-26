@@ -7,14 +7,49 @@ import cls from './storeHistory.module.scss';
 import { useDispatch } from 'react-redux';
 import { GrClose } from 'react-icons/gr'
 import { useState } from 'react';
+import MoveGoods from './components/MoveGoods';
+import MoveCash from './components/MoveCash';
+import Employeers from './components/Employeers';
+import { useGetStoresQuery } from '../../store/query/storesQuery'
+
 
 const StoreHistory = () => {
+  const [toggle, setToggle] = useState('MoveGoods')
+  const { data, isLoading } = useGetStoresQuery({token: localStorage.getItem('accessToken')})  
+  const storeId = +localStorage.getItem('storeId')
+
+  const typeToggle = [
+    {
+      id:1,
+      title: 'Движение товара',
+      element: MoveGoods,
+      key: 'MoveGoods',
+    }, 
+    {
+      id:2,
+      title: 'Движение денег',
+      element: MoveCash,
+      key: 'MoveCash',
+    },
+    {
+      id:3,
+      title: 'Сотрудники',
+      element: Employeers,
+      key: 'Employeers',
+    },  
+  ]
   const [drop, setDrop] = useState({
     firstDrop: false,
     secondDrop: false,
   })
 
+  const foundedStore = data?.results?.find(s => s?.id === storeId)
+  console.log(foundedStore)
+
   const dispatch = useDispatch()
+
+  const renderTemplate = () => 
+    typeToggle.map(i => i.key.includes(toggle) ? <i.element key={i.id} drop={drop} setDrop={setDrop} cls={cls}/> : <></>)
 
   return (
     <div className={cls['history']}>
@@ -27,119 +62,34 @@ const StoreHistory = () => {
       <div className={cls['history-body']}>
         <div className={cls['history-user']}>
           <div className={cls['history-info']}>
-            <h3>ДОмашний</h3>
+            <h3>{foundedStore?.name}</h3>
             <span>Владелец</span>
           </div>
           <p>Создан 14 января</p>
           <div className={cls['history-links']}>
             <button>По умолчанию</button>
+            <button>Продукты</button>
           </div>
         </div>
         <div className={cls['history-line']}>
           <span>последние операции</span>
         </div>
         <div className={cls['history-nav']}>
-          <button className={cls['active_btn']}>Движение товара</button>
-          <button>Движение денег</button>
+          {
+            typeToggle?.map((i) => 
+              <button 
+                key={i.id} 
+                onClick={() => setToggle(i.key)}
+                className={toggle === i.key ? cls['active_btn'] : ''}
+              >
+                {i.title}
+              </button>,
+            )
+          }
         </div>
-        <h1 className={cls['history-title']}>15 января</h1>
-        <div className={cls['history-drop']}>
-          <div className={cls['history-drop-head']}>
-            <div className={cls['history-drop-handler']}>
-              <div>
-                <span></span>
-                <p>Продажа #1</p>
-              </div>
-              <h3>200.00 сом</h3>
-            </div>
-            <div className={cls['history-drop-info']}>
-              <p>Магазин <span>ДОмашний</span></p>
-              <b><span>Asad Halmatov</span>15 января 23:06</b>
-            </div>
-          </div>
-          <div id={cls[drop.firstDrop ? 'active_drop' : '']} className={cls['history-drop-body']}>
-            <div onClick={() => setDrop((prev) => ({...prev, firstDrop: !drop.firstDrop}))} className={cls['history-drop-body-handler']}>
-              <span><AiOutlineCheckCircle/> Документ оплачен</span>
-              <button><BsChevronDown/></button>
-            </div>
-            {drop.firstDrop && (
-              <div className={cls['history-drop-body-list']}>
-                <div className={cls['history-drop-body-list-child']}>
-                  <div>
-                    #
-                  </div>
-                  <div>
-                  Счёт
-                  </div>
-                  <div>
-                  Контрагент
-                  </div>
-                  <div>
-                  Дата
-                  </div>
-                  <div>
-                  Сумма
-                  </div>
-                </div>  
-                <div className={cls['history-drop-body-list-child']}>
-                  <div className={cls['baller']}>
-                    1
-                  </div>
-                  <div>
-                    <span>№1</span>
-                  </div>
-                  <div>
-                    <span>asad</span>
-                  </div>
-                  <div>
-                  Дата
-                  </div>
-                  <div>
-                  Сумма
-                  </div>
-                </div>  
-              </div>
-            )}
-          </div>
-          <div id={cls[drop.secondDrop ? 'active_drop' : '']} className={cls['history-drop-footer']}>
-            <div onClick={() => setDrop((prev) => ({...prev, secondDrop: !drop.secondDrop}))} className={cls['history-drop-footer-handler']}>
-              <span>1 позиция</span>
-              <button><BsChevronDown/></button>
-            </div>
-            {drop.secondDrop && (
-              <div className={cls['history-drop-footer-list']}>
-                <div className={cls['history-drop-footer-list-child']}>
-                  <div>
-                    Наименование
-                  </div>
-                  <div>
-                    Кол-во
-                  </div>
-                  <div>
-                    Цена
-                  </div>
-                  <div>
-                    Итог
-                  </div>
-                </div>
-                <div className={cls['history-drop-footer-list-child']}>
-                  <div>
-                    <span>Очки</span>
-                  </div>
-                  <div>
-                    1
-                  </div>
-                  <div>
-                    200.00
-                  </div>
-                  <div>
-                    200.00
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        {
+          renderTemplate()
+        }
       </div>
     </div>
   )

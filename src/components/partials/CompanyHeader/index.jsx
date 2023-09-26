@@ -33,6 +33,11 @@ const data = [
     title: 'Данные',
     path: appRoutesPath.COMPANY_SETTINGS_DATA,
   },
+  {
+    id: 7,
+    title: 'Страны',
+    path: appRoutesPath.COUNTRIES,
+  },
 ]
 
 const CompanyHeader = () => {

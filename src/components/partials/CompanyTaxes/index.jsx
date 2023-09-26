@@ -1,11 +1,17 @@
 import { BsChevronDown } from 'react-icons/bs';
 import cls from './companyTaxes.module.scss';
 import { useState } from 'react';
+import { axiosInstance } from '../../../axios';
+import { useForm } from 'react-hook-form';
 
 const CompanyTaxes = () => {
   const [state, setState] = useState({
     isDrop: false,
     dropValue: 'Налог включён в цену товара',
+  })
+
+  const { handleSubmit , register, reset} = useForm({
+    mode: 'onSubmit',
   })
 
   const dropHandler = (value) => {
@@ -16,8 +22,20 @@ const CompanyTaxes = () => {
     }))
   }
 
+
+  const createTaxes = async (ed) => {
+    try { 
+      if(ed) {
+        axiosInstance.post('/settings/taxes/', ed)
+          .then(res => reset())
+      }
+    } catch (e) {
+      console.log(e)
+    } 
+  }
+
   return (
-    <div className={cls['taxes']}>
+    <form className={cls['taxes']}>
       <div className={cls['taxes-picker']}>
         <div 
           onClick={() => setState((prev) => ({...prev, isDrop: !state.isDrop}))} 
@@ -42,20 +60,20 @@ const CompanyTaxes = () => {
       <div className={cls['taxes-child']}>
         <div>
           <h3>Наименование <span>*</span></h3>
-          <input type="text" />
+          <input {...register('taxes')} type="text" />
         </div>
         <div>
           <h3>Ставка налога, % <span>*</span></h3>
-          <input className={cls['value']} defaultValue={0} type="number" />
+          <input {...register('percents')} className={cls['value']} defaultValue={0} type="number" />
         </div>
         <div>
           <h3>Код налога</h3>
-          <input type="text" placeholder='001' />
+          <input {...register('code')} type="text" placeholder='001' />
         </div>
       </div>
-      <button className={cls['taxes-adder']}>Добавить еще</button>
-      <button className={cls['taxes-saver']}>Сохранить</button>
-    </div>
+      {/* <button className={cls['taxes-adder']}>Добавить еще</button> */}
+      <button type='submit ' onClick={handleSubmit(createTaxes)}  className={cls['taxes-saver']}>Сохранить</button>
+    </form>
   )
 }
 

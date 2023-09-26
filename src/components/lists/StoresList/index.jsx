@@ -15,7 +15,7 @@ const StoresList = () => {
   const { data, isLoading, refetch } = useGetStoresQuery({token: localStorage.getItem('accessToken')})
 
   const modalHandler = (type , id) => {
-    localStorage.setItem('storeId', Number(id))
+    localStorage.setItem('storeId', id)
     dispatch(setModal())
     dispatch(setModalType(type))
   }
@@ -39,7 +39,7 @@ const StoresList = () => {
         </div>
         {isLoading ? <Loader/> : data?.results.map(item => (
           <div key={item.id} className={cls['stores-child']}>
-            <div onClick={() => modalHandler(modalTypes.STORE_HISTORY_TYPE)} className={cls['stores-child-head']}>
+            <div onClick={() => modalHandler(modalTypes.STORE_HISTORY_TYPE, item.id)} className={cls['stores-child-head']}>
               <span className={cls['stores-child-icon']}><HiOutlineBuildingOffice/>  </span>
               <div>
                 <h3>{item.name}</h3>

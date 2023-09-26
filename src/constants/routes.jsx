@@ -11,6 +11,9 @@ import Services from '../pages/Services';
 import Products from '../pages/Products';
 import NotFound from '../pages/NotFound';
 import Main from '../pages/Main';
+import Stores from '../pages/Stores';
+import CompanyCountries from '../components/partials/CompanyCountries';
+import GroupList from '../components/lists/GroupList';
 
 export const appRoutes = [
   {
@@ -94,6 +97,21 @@ export const appRoutes = [
         id: 14,
         element: <SingleProduct/>,
         path: appRoutesPath.SINGLE_PRODUCT,
+      },
+      {
+        id:15,
+        element: <Stores />,
+        path: appRoutesPath.MAGAZINE,
+      },
+      {
+        id:16,
+        element: <CompanySettings />,
+        path: appRoutesPath.COUNTRIES,
+      },
+      {
+        id:17,
+        element: <GroupList />,
+        path: appRoutesPath.GROUPS,
       },
     ],
   },
@@ -203,51 +221,51 @@ export const appRoutes = [
         element: <CashStore/>,
         path: appRoutesPath.CASH_STORE,
       },
-      {
-        id: 5,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS,
-      },
-      {
-        id: 5,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS_PROPS,
-      },
-      {
-        id: 6,
-        element: <CompanyWorkers/>,
-        path: appRoutesPath.COMPANY_WORKERS,
-      },
-      {
-        id: 7,
-        element: <CompanyStores/>,
-        path: appRoutesPath.COMPANY_STORES,
-      },
+      // {
+      //   id: 5,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS,
+      // },
+      // {
+      //   id: 5,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS_PROPS,
+      // },
+      // {
+      //   id: 6,
+      //   element: <CompanyWorkers/>,
+      //   path: appRoutesPath.COMPANY_WORKERS,
+      // },
+      // {
+      //   id: 7,
+      //   element: <CompanyStores/>,
+      //   path: appRoutesPath.COMPANY_STORES,
+      // },
       {
         id: 8,
         element: <ImportProduct/>,
         path: appRoutesPath.PRODUCTS_IMPORT,
       },
-      {
-        id: 9,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS_DISCOUNTS,
-      },
-      {
-        id: 10,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS_TAXES,
-      },
-      {
-        id: 11,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS_EMAILS,
-      },
-      {
-        id: 12,
-        element: <CompanySettings/>,
-        path: appRoutesPath.COMPANY_SETTINGS_DATA,
-      },
+      // {
+      //   id: 9,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS_DISCOUNTS,
+      // },
+      // {
+      //   id: 10,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS_TAXES,
+      // },
+      // {
+      //   id: 11,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS_EMAILS,
+      // },
+      // {
+      //   id: 12,
+      //   element: <CompanySettings/>,
+      //   path: appRoutesPath.COMPANY_SETTINGS_DATA,
+      // },
       {
         id: 511,
         element: <NotFound/>,

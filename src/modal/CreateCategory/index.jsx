@@ -1,16 +1,18 @@
 import { setModal } from '../../store/slices/modalSlice';
-import cls from './createGroup.module.scss';
+import cls from './createCategory.module.scss';
 import { useDispatch } from 'react-redux';
 import { GrClose } from 'react-icons/gr'
-import { useState } from 'react';
-import { useGetStoresQuery } from '../../store/query/storesQuery';
+import React, { useState } from 'react';
 import { axiosInstance } from '../../axios';
 import { useForm } from 'react-hook-form';
 
-const CreateGroup = () => {
+const CreateCategory = () => {
   const dispatch = useDispatch()
+  const [getGroup, setGetGroup] = React.useState([])
+  
+
   const [store, setStore] = useState({
-    storeValue: 'Магазины',
+    storeValue: 'Группы',
     storeObject: {},
     isStore: false,
   })
@@ -23,7 +25,10 @@ const CreateGroup = () => {
     mode: 'onSubmit',
   })
 
-  const { data: StoreData, isLoading, refetch } = useGetStoresQuery({token: localStorage.getItem('accessToken')})
+  React.useEffect(() => {
+    axiosInstance.get('/products/groups/')
+      .then(res => setGetGroup(res.data))
+  }, [])  
 
   const handleStore = (val) => {
     setStore((prev) => ({...prev, storeValue: val?.name, storeObject: val , isStore: !store.isStore}))
@@ -32,18 +37,16 @@ const CreateGroup = () => {
   const onSubmit = async (data) => {
     const newData = {
       ...data,
-      branch: store?.storeObject?.id,
+      group: store?.storeObject?.id,
     }
     try {
-      await axiosInstance.post('/products/groups/', newData)
+      await axiosInstance.post('/products/categories/', newData)
       dispatch(setModal(false))
       reset()
-      refetch()
       window.location.reload()
     } catch (e) {
       console.log(e)
     }
-    refetch()
   }
 
   return (
@@ -54,18 +57,18 @@ const CreateGroup = () => {
       </div>
       <div className={cls['group-body']}>
         <div>
-          <h3>Наименование группы</h3>
+          <h3>Наименование категории</h3>
           <input type="text" {...register('name')}/>
         </div>
         <div className={cls['stores']}>
-          <p>Магазины <button>?</button></p>
+          <p>Группы <button>?</button></p>
           <div>
             <span onClick={() => setStore((prev) => ({...prev, isStore: !store.isStore}))}>
               {store.storeValue}
             </span>
             {store.isStore &&  <ul className={cls['drop']}>
               {
-                StoreData?.results?.map((item, i) => 
+                getGroup?.results?.map((item, i) => 
                   <p key={i} onClick={() => handleStore(item)}>{item.name}</p>)
               }
             </ul>}
@@ -76,4 +79,4 @@ const CreateGroup = () => {
   )
 }
 
-export default CreateGroup
+export default CreateCategory

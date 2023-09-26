@@ -16,6 +16,7 @@ const GroupCreate = () => {
     dispatch(setMobileModalType(''))
     dispatch(setAdder(true))
   }
+  
 
   return (
     <div id={cls[mobileModalType === mobileModalTypes.CREATE_GROUP ? 'active' : '']} className={cls['group']}>

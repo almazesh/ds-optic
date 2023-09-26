@@ -6,6 +6,8 @@ export const userStatus = {
 }
 
 export const appRoutesPath = {
+  GROUPS: 'company-groups',
+  COUNTRIES: 'company-settings-country',
   MAIN: '/',
   REDIRECT: '*',
   LOGIN: 'login',
@@ -23,6 +25,7 @@ export const appRoutesPath = {
   COMPANY_SETTINGS_DATA: 'company-settings-data', 
   COMPANY_WORKERS: 'company-workers',
   COMPANY_STORES: 'company-stores',
+  MAGAZINE: 'stores',
 }
 
 export const modalTypes = {
@@ -35,6 +38,7 @@ export const modalTypes = {
   EDIT_PRODUCT_TYPE: 'edit_product_type',
   CREATE_STORE_TYPE: 'create_store_type',
   CREATE_GROUP_TYPE: 'create_group_type',
+  CREATE_CATEGORY_TYPE: 'create_category_type',
   STORE_HISTORY_TYPE: 'store_history_type',
   CHANGE_HISTORY_TYPE: 'change_history_type',
   EDIT_STORE_TYPE: 'edit_store_type',

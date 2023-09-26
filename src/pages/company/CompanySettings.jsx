@@ -10,6 +10,7 @@ import CompanyMain from '../../components/partials/CompanyMain';
 import CompanyData from '../../components/partials/CompanyData';
 import { appRoutesPath } from '../../constants';
 import { useLocation } from 'react-router-dom';
+import CompanyCountries from '../../components/partials/CompanyCountries';
 
 const CompanySettings = () => {
   const location = useLocation()
@@ -24,7 +25,8 @@ const CompanySettings = () => {
               : location.pathname.slice(1) === appRoutesPath.COMPANY_SETTINGS_TAXES ? <CompanyTaxes/> 
                 : location.pathname.slice(1) === appRoutesPath.COMPANY_SETTINGS_EMAILS ? <CompanyEmail/> 
                   : location.pathname.slice(1) === appRoutesPath.COMPANY_SETTINGS_DATA ? <CompanyData/> 
-                    : ''}
+                    : location.pathname.slice(1) === appRoutesPath.
+                      COUNTRIES ? <CompanyCountries /> : ''}
       </> : 
       <>
         <CompanyHeaderMobile/>

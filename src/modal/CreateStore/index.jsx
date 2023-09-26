@@ -20,11 +20,11 @@ const schema = yup.object().shape({
 
 
 const CreateStore = () => {
-
+  const [file, setFile] = React.useState({})
 
   const dispatch = useDispatch()
   const [taxes, setTaxes] = useState({
-    taxesValue: 'налоги',
+    taxesValue: 'Налоги',
     isTaxes: false,
   })
   const [getTaxes, setGetTaxes] = useState({})
@@ -51,9 +51,19 @@ const CreateStore = () => {
 
   const createStoreHandler = async (e) => {
     try {
+      const formData = new FormData()
+
+      formData.append('name', e.name)
+      formData.append('taxes', +taxes.taxesValue)
+      formData.append('address', e.address)
+      formData.append('description', e.description)
+      formData.append('image', file)
+
+
+
       await createStore({
         token: localStorage.getItem('accessToken'),
-        data: {...e,  taxes: Number(taxes.taxesValue)},
+        data: formData,
       })
 
       reset()
@@ -71,7 +81,6 @@ const CreateStore = () => {
     <div className={cls['store']}>
       <div className={cls['store-head']}>
         <button   
-          type='submit' 
           className={cls[isValid && taxes.taxesValue ? 'active_btn' : '']} 
           onClick={handleSubmit(createStoreHandler)}
         >Сохранить</button>
@@ -98,6 +107,21 @@ const CreateStore = () => {
               </ul>}
             </div>
           </div>
+          <div className={cls['store-body-upload']}>
+            <h3>Фотография</h3>
+            <label className={cls['input-file']}>
+              <input
+                accept="image/png, image/jpeg"
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                name="file"
+              />
+              <span className={cls['input-file-btn']}>
+                <p>Выберите фото для загрузки</p>
+                или перетащите его мышью
+              </span>
+            </label>
+            </div>
           <div className={cls['store-textarea']}>
             <h3>Адрес</h3>
             <textarea {...register('address')}></textarea>

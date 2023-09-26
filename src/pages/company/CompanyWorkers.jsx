@@ -8,7 +8,7 @@ const CompanyWorkers = () => {
 
   return (
     <>
-    <WorkersList profile={data}/>
+      <WorkersList profile={data}/>
     </>    
   )
 }

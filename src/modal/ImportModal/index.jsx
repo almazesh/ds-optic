@@ -6,8 +6,6 @@ import { useSelector } from 'react-redux'
 const ImportModal = () => {
   const { isImportModal, importModalType } = useSelector(state => state.modal)
 
-  console.log(importModalType);
-  
   return (
     <div id={cls[isImportModal ? 'active' : '']} className={cls['import']}>
       <div className={cls['import-wrapper']}>

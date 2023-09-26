@@ -36,7 +36,7 @@
   a{
     height: 37px;
     width: 185px;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 13px;  
     line-height: 16px;
     border-radius: 4px;
@@ -46,7 +46,7 @@
     color: rgba(0,0,0, 0.8);
     border-radius: 4px;
     margin-top: 5px;
-    padding-left: 30px;
+    padding-left: 40px;
     box-sizing: border-box;
   }
 
@@ -57,6 +57,16 @@
   &-list{
     a{
       transition: .2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+
+      svg {
+        font-size: 17px;
+        left: 11px;
+        position: absolute;
+      }
 
       &:hover{
         background: $app-lightdark-color;
@@ -75,18 +85,28 @@
         align-items: center;
         font-family: $font-family-poppins;
         font-size: 13px;
-        font-weight: 600;
+        gap: 10px;
+        font-weight: 500;
         line-height: 16px;
         cursor: pointer;
         margin-top: 5px;
         border-radius: 4px;
-        padding-left: 30px;
+        padding-left: 40px;
         transition: .2s;
+        position: relative;
 
-        svg{
+        .icon {
+          font-size: 17px;
+          left: 11px;
+          position: absolute;
+        }
+
+        .chevron{
           margin-left: 10px;
-          font-size: 13px;
+          font-size: 10px;
           color: #B6B6B6;
+          position: absolute;
+          right: 5%;
         }
 
         &:hover{
@@ -122,7 +142,7 @@
       span{
         margin-bottom: 5px;
 
-        svg{
+        .chevron{
           transform: rotate(180deg);
         }
       }

@@ -19,6 +19,8 @@ const ImportHeader = () => {
   const dispatch = useDispatch()
   const { titles, datas } = useSelector(state => state.import)
 
+  console.log(datas)
+
   const needActionHandler = (str) => {
     setState((prev) => ({...prev, needAction: str, isNeedAction: !state.isNeedAction}))
   }
@@ -27,7 +29,7 @@ const ImportHeader = () => {
     setState((prev) => ({...prev, productsStore: str.name, productsStoreId: str.id, isStore: !state.isStore}))
   }
 
-  const [createProducts] = useCreateProductsBulkMutation()
+  const [createProductsBulk] = useCreateProductsBulkMutation()
   const { data } = useGetStoresQuery({
     token: localStorage.getItem('accessToken'),
   })
@@ -43,17 +45,17 @@ const ImportHeader = () => {
       dispatch(setImportModalType(importModalTypes.IMPORT_ALERT_STORE_TYPE))
     }else{
       try {
-        await createProducts({
-          token: localStorage.getItem('accessToken'),
+        await createProductsBulk({
           data: filterProductsByKeysAndValues(titles, datas),
+          token: localStorage.getItem('accessToken'),
         })
         alert('Продукты созданы !')
       } catch (error) {
         alert(error)
       }
-      await createProducts({
-        token: localStorage.getItem('accessToken'),
+      await createProductsBulk({
         data: filterProductsByKeysAndValues(titles, datas),
+        token: localStorage.getItem('accessToken'),
       })
     }
   }

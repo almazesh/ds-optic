@@ -6,7 +6,8 @@ import cls from './header.module.scss';
 import { axiosInstance } from '../../../axios';
 import { setUserStatus } from '../../../store/slices/userSlice';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BiUserCircle } from 'react-icons/bi';
 
 const Header = () => {
   const location = useLocation()
@@ -38,8 +39,12 @@ const Header = () => {
     return response
   }
 
-  getUserInfo(access)
+  useEffect(() => {
+    getUserInfo(access)
     .then(res => setUser(res.data))
+  }, [access])
+
+  console.log(user)
 
   function setRole(item) {
     if(item?.role?.name === 'super admin') {
@@ -68,7 +73,7 @@ const Header = () => {
           localStorage.clear()
           window.location.reload()
         }}>
-          {user?.user_avatar && <img src={user?.user_avatar} alt="" />}
+          {user?.user_avatar ? <img src={user?.user_avatar} alt="" /> : <BiUserCircle />}
           <div>
             <h5>{user?.fullname}</h5>
             <p>{setRole(user)}</p>

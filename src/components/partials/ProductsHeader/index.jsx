@@ -31,7 +31,7 @@ const ProductsHeader = () => {
           onClick={() => modalHandler(modalTypes.CREATE_PRODUCT_TYPE)} 
           className={cls['header-create-btn']}>Создать товар</button>
         <button 
-          onClick={() => modalHandler(modalTypes.CREATE_GROUP_TYPE)}  
+          onClick={() => modalHandler(modalTypes.CREATE_CATEGORY_TYPE)}  
           className={cls['header-create-group-btn']}><AiOutlineFolder/> <span><FaPlus/></span></button>
         <button onClick={() => navigate(`/${appRoutesPath.PRODUCTS_IMPORT}`)} 
           className={cls['header-create-import-btn']}><FaRegFileExcel/> Импорт товаров</button>

@@ -40,6 +40,15 @@ const data = {
   [appRoutesPath.COMPANY_SETTINGS_DATA]: {
     text: 'Настройки / данные',
   },
+  [appRoutesPath.MAGAZINE] : {
+    text: 'Магазины',
+  },
+  [appRoutesPath.COUNTRIES] : {
+    text: 'Настройки / страны',
+  },
+  [appRoutesPath.GROUPS] : {
+    text: 'Компания / добавить группу',
+  },
 }
 
 const mobileData = {

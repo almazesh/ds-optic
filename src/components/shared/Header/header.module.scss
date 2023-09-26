@@ -47,12 +47,17 @@
             height: 100%;
             align-items: center;
             cursor: pointer;
+            gap: 5px;
             
             img{
                 width: 34px;
                 height: 34px;
                 border-radius: 17px;
-                margin-right: 10px;
+            }
+
+            svg {
+                color: white;
+                font-size: 30px;
             }
 
             div{

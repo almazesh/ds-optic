@@ -11,7 +11,7 @@
   }
 
   &-nav{
-    width: 252px;
+    width: 362px;
     height: 28px;
     margin: 0 auto;
     margin-top: 11px;
@@ -35,11 +35,12 @@
       font-size: 12px;
       line-height: 14px;
       color: #000000;
+      transition: .4s;
     }
 
     .active_btn{
       background: #E8E8E8;
-      border-radius: 4px 0px 0px 4px;
+      border-radius: 4px;
     }
   }
 
@@ -118,6 +119,8 @@
 
   &-links{
     margin-top: 20px;
+    display: flex;
+    gap: 10px;
 
     button{
       width: 110px;

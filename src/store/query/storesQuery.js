@@ -10,7 +10,7 @@ export const storesQuery = createApi({
   endpoints: (builder) => ({
     getStores: builder.query({
       query: ({ token }) => ({
-        url: 'branches/branches',
+        url: 'branches/branches/',
         headers: {
           Authorization: `Bearer ${token}`,
         },

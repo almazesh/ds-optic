@@ -28,7 +28,18 @@ export const productQuery = createApi({
       }),
       invalidatesTags: [storeQueryTags.PRODUCT_TAG],
     }),
+    createProduct: builder.mutation({
+      query: ({ data, token }) => ({
+        url: 'products/products/',
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: [storeQueryTags.PRODUCT_TAG],
+    }),
   }),
 });
 
-export const { useCreateProductsBulkMutation, useGetProductsQuery } =  productQuery;
+export const {useGetProductsQuery, useCreateProductsBulkMutation, useCreateProductMutation} =  productQuery;

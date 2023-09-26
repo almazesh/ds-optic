@@ -89,6 +89,16 @@
 
   #item-naming{
     cursor: pointer;
+
+    p {
+      display: flex;
+      gap: 10px;
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+      }
+    }
   }
 
   &-code{
