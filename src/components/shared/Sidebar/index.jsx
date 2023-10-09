@@ -55,12 +55,12 @@ const Sidebar = () => {
       <div className={cls['sidebar-buttons']}>
         <button>Создать документ</button>
       </div>
-      <div className={cls['sidebar-list']}>
+      <div className={cls['sidebar-list']} onClick={() => localStorage.setItem('Index', null)}>
         <CustomLink to={appRoutesPath.MAIN}>
           <GoHome />
           Главная
         </CustomLink>
-        <CustomLink to={appRoutesPath.PRODUCTS}>
+        <CustomLink  to={appRoutesPath.PRODUCTS} >
           <BsBox />
           Товары и услуги
         </CustomLink>

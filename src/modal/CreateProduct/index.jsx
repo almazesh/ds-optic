@@ -105,6 +105,8 @@ const CreateProduct = () => {
         data: form,
         token: localStorage.getItem('accessToken'),
       })
+      setModal()
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }

@@ -11,6 +11,7 @@ import MoveGoods from './components/MoveGoods';
 import MoveCash from './components/MoveCash';
 import Employeers from './components/Employeers';
 import { useGetStoresQuery } from '../../store/query/storesQuery'
+import { useNavigate } from 'react-router-dom';
 
 
 const StoreHistory = () => {
@@ -51,12 +52,14 @@ const StoreHistory = () => {
   const renderTemplate = () => 
     typeToggle.map(i => i.key.includes(toggle) ? <i.element key={i.id} drop={drop} setDrop={setDrop} cls={cls}/> : <></>)
 
+  const navigate = useNavigate()
+
   return (
     <div className={cls['history']}>
       <div className={cls['history-head']}>
-        <button 
+        {/* <button 
           onClick={() => dispatch(setModalType(modalTypes.USER_EDIT_TYPE))} 
-          className={cls['history-editBtn']}>Редактировать</button>
+          className={cls['history-editBtn']}>Редактировать</button> */}
         <button onClick={() => dispatch(setModal(false))} className={cls['history-closer']}><GrClose/></button>
       </div>
       <div className={cls['history-body']}>
@@ -68,7 +71,11 @@ const StoreHistory = () => {
           <p>Создан 14 января</p>
           <div className={cls['history-links']}>
             <button>По умолчанию</button>
-            <button>Продукты</button>
+            <button onClick={() => {
+              navigate('/products')
+              dispatch(setModal())
+              localStorage.setItem('Index', foundedStore?.id)
+            }}>Продукты</button>
           </div>
         </div>
         <div className={cls['history-line']}>

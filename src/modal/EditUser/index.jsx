@@ -40,7 +40,7 @@ const EditUser = () => {
       
       await axiosInstance.put(`/accounts/users/${id}/`, formData)
 
-      modalCloser()
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }

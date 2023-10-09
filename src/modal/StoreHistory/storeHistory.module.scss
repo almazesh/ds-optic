@@ -34,7 +34,7 @@
       font-weight: 400;
       font-size: 12px;
       line-height: 14px;
-      color: #000000;
+      color: $app-main-color;
       transition: .4s;
     }
 
@@ -47,7 +47,7 @@
   &-editBtn{
     width: 154.27px;
     height: 38.77px;
-    background: #015589;
+    background: $app-main-color;
     border-radius: 4px;
     border: none;
     outline: none;
@@ -125,7 +125,7 @@
     button{
       width: 110px;
       height: 31px;
-      background: #015589;
+      background: $app-main-color;
       border-radius: 4px;
       border: none;
       outline: none;

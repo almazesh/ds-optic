@@ -6,8 +6,9 @@ import { appRoutesPath, modalTypes } from '../../../constants';
 import cls from './productHeader.module.scss';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { FcFolder, FcOpenedFolder } from 'react-icons/fc'
 
-const ProductsHeader = () => {
+const ProductsHeader = ({...togglers}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -32,12 +33,14 @@ const ProductsHeader = () => {
           className={cls['header-create-btn']}>Создать товар</button>
         <button 
           onClick={() => modalHandler(modalTypes.CREATE_CATEGORY_TYPE)}  
-          className={cls['header-create-group-btn']}><AiOutlineFolder/> <span><FaPlus/></span></button>
+          className={cls['header-create-group-btn']}><FcFolder/> <span><FaPlus/></span></button>
         <button onClick={() => navigate(`/${appRoutesPath.PRODUCTS_IMPORT}`)} 
           className={cls['header-create-import-btn']}><FaRegFileExcel/> Импорт товаров</button>
       </div>
       <div className={cls['header-right']}>
-        <button className={cls['header-right-show-btn']}><AiOutlineFolder/></button>
+        <button className={cls['header-right-show-btn']} onClick={() => togglers.setToggleFolders(prev => !prev)}>
+          {togglers.toggleFolders ? <FcFolder/> : <FcOpenedFolder />}
+        </button>
         <button className={cls['header-right-setting-btn']}><IoSettingsSharp/></button>
       </div>
     </div>

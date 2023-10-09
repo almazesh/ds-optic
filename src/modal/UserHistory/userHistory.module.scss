@@ -13,7 +13,23 @@
   &-editBtn{
     width: 154.27px;
     height: 38.77px;
-    background: #015589;
+    background: $app-main-color;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: $font-family-poppins;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    color: #FFFFFF;
+  }
+
+  &-deleteBtn {
+    width: 50px;
+    height: 38.77px;
+    background: $app-main-color;
     border-radius: 4px;
     border: none;
     outline: none;

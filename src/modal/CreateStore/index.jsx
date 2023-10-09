@@ -17,14 +17,13 @@ const schema = yup.object().shape({
   description: yup.string().required(),
 });
 
-
-
 const CreateStore = () => {
   const [file, setFile] = React.useState({})
 
   const dispatch = useDispatch()
   const [taxes, setTaxes] = useState({
     taxesValue: 'Налоги',
+    taxObject: {},
     isTaxes: false,
   })
   const [getTaxes, setGetTaxes] = useState({})
@@ -54,7 +53,7 @@ const CreateStore = () => {
       const formData = new FormData()
 
       formData.append('name', e.name)
-      formData.append('taxes', +taxes.taxesValue)
+      formData.append('taxes', +taxes.taxObject?.id)
       formData.append('address', e.address)
       formData.append('description', e.description)
       formData.append('image', file)
@@ -66,6 +65,8 @@ const CreateStore = () => {
         data: formData,
       })
 
+      modalCloser()
+
       reset()
       setTaxes('')
     } catch (error) {
@@ -74,7 +75,7 @@ const CreateStore = () => {
   } 
 
   const handleTaxes = (val) => {
-    setTaxes((prev) => ({...prev, taxesValue: val, isTaxes: !taxes.isTaxes}))
+    setTaxes((prev) => ({...prev, taxesValue: val?.taxes, taxObject: val, isTaxes: !taxes.isTaxes}))
   }
 
   return (
@@ -102,7 +103,7 @@ const CreateStore = () => {
               {taxes.isTaxes &&  <ul className={cls['drop']}>
                 {
                   getTaxes?.results?.map((item, i) => 
-                    <p key={i} onClick={() => handleTaxes(item?.id)}>{item.taxes}</p>)
+                    <p key={i} onClick={() => handleTaxes(item)}>{item.taxes}</p>)
                 }
               </ul>}
             </div>

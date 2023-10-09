@@ -5,6 +5,7 @@ import UserCards from '../../../components/lists/WorkersList/UserCards';
 import cls from '../../../components/lists/WorkersList/workersList.module.scss';
 import { useDispatch } from 'react-redux';
 import { setModal, setModalType } from '../../../store/slices/modalSlice';
+import { Empty } from 'antd';
 
 
 const Employeers = () => {
@@ -17,14 +18,12 @@ const Employeers = () => {
 
   const { data: storeData, isLoading: isLoadingStore } = useGetStoresQuery({token: localStorage.getItem('accessToken')}) 
 
-  console.log(storeData)
-
   const getMembersOfStore = () => {
     const foundedStore = storeData?.results?.find(i => i.id === storeId)
     const foundedUsers = []
 
     userData?.forEach(u => foundedStore?.members.forEach(s => u?.id === s ? foundedUsers.push(u) : null))
-   return foundedUsers
+    return foundedUsers
   }
 
   const modalHandler = (type, id) => {
@@ -33,22 +32,26 @@ const Employeers = () => {
     localStorage.setItem('userId', Number(id))
   }
 
-  console.log( getMembersOfStore())
-
   return (
     <div>
-      <div style={{marginTop:'30px'}} className={cls['work-list']}>
-        {
-          !!getMembersOfStore() && getMembersOfStore()?.map((item, i) => (
-            <UserCards 
-              item={item}
-              key={i} 
-              cls={cls} 
-              modalHandler={modalHandler}
-            />
-          ))
-        }
-      </div>
+      {
+        getMembersOfStore()?.length === 0 ? 
+          <div className='center-empty'> 
+            <Empty />
+          </div> : 
+          <div style={{marginTop:'30px'}} className={cls['work-list']}>
+            {
+              getMembersOfStore()?.map((item, i) => (
+                <UserCards 
+                  item={item}
+                  key={i} 
+                  cls={cls} 
+                  modalHandler={modalHandler}
+                />
+              ))
+            }
+          </div>
+      }
     </div>
   )
 }

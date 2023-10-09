@@ -65,6 +65,7 @@ const EditStore = () => {
       await axiosInstance.put(`/branches/branches/${id}/`, base)
       modalCloser()
       refetch()
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }

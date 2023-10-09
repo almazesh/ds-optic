@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { GrClose } from 'react-icons/gr'
 import { useState } from 'react';
 import { useGetUsersQuery } from '../../store/query/usersQuery';
+import { MdDelete } from 'react-icons/md';
+import { axiosInstance } from '../../axios';
 
 
 const UserHistory = () => {
@@ -26,8 +28,6 @@ const UserHistory = () => {
 
   const foundedUser = data && data?.find(item => item?.id === userId)
 
-  console.log(foundedUser)
-
   function setRole(item) {
     if(item?.role?.name === 'super admin') {
       return 'Владелец'
@@ -40,12 +40,30 @@ const UserHistory = () => {
     }
   }
 
+  const deleteUser = async (id) => {
+    if(!id) return;
+
+    try {
+      await axiosInstance.delete(`/accounts/users/${id}`)
+      window.location.reload()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+
   return (
     <div className={cls['history']}>
       <div className={cls['history-head']}>
-        <button 
-          onClick={() => dispatch(setModalType(modalTypes.USER_EDIT_TYPE))} 
-          className={cls['history-editBtn']}>Редактировать</button>
+        <div>
+          <button 
+            style={{marginRight: '5px'}}
+            onClick={() => dispatch(setModalType(modalTypes.USER_EDIT_TYPE))} 
+            className={cls['history-editBtn']}>Редактировать</button>
+          <button 
+            onClick={() => deleteUser(userId)} 
+            className={cls['history-deleteBtn']}><MdDelete /></button>
+        </div>
         <button onClick={() => dispatch(setModal(false))} className={cls['history-closer']}><GrClose/></button>
       </div>
       <div className={cls['history-body']}>

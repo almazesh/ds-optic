@@ -17,7 +17,7 @@
     button:nth-child(1){
       width: 112.89px;
       height: 39.8px;
-      background: #015589;
+      background: $app-main-color;
       border-radius: 4px;
       border: none;
       font-family: $font-family-roboto;
@@ -71,7 +71,7 @@
           border-radius: 5px;
           background: #fff;
           z-index: 2;
-          overflow: hidden;
+          overflow: auto;
           top: 103%;
     
           p{

@@ -90,6 +90,8 @@ const CreateAdmin = () => {
         data: formData,
       })
 
+      dispatch(setModal())
+      reset()
 
       if(result) {
         await axiosInstance.post('/branches/branches/add_user_to_branches/', {

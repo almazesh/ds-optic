@@ -5,7 +5,7 @@
 
   &-head{
     padding: 24px;
-    background: #015589;
+    background: $app-main-color;
     text-align: center;
 
     h3{
@@ -48,7 +48,7 @@
         height: 2px;
         left: 0;
         bottom: -1px;
-        background: #015589;
+        background: $app-main-color;
         display: none;
       }
     }

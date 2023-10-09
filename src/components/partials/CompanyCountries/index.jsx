@@ -702,6 +702,7 @@ const CompanyCountries = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
   } = useForm({
     mode: 'onSubmit',
@@ -715,6 +716,8 @@ const CompanyCountries = () => {
     }
     try {
       await axiosInstance.post('/settings/countries/', newData)
+      reset()
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }

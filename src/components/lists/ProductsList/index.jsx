@@ -7,8 +7,11 @@ import { AiOutlineFolder } from 'react-icons/ai'
 import cls from './productList.module.scss';
 import React from 'react';
 import { axiosInstance } from '../../../axios';
+import { Empty } from 'antd';
+import  { MdOutlineStorefront} from 'react-icons/md'
+import { FaHome } from 'react-icons/fa';
 
-const ProductsList = () => {
+const ProductsList = ({...togglers}) => {
   const [currentIndex, setCurrentIndex] = React.useState(0)
   const dispatch = useDispatch()
   const { status } = useSelector(state => state.user)
@@ -66,263 +69,375 @@ const ProductsList = () => {
 
   }
 
+  const foundedStoreID = +localStorage.getItem('Index')
 
-  console.log(productData)
+  function storeChoosenBy() {
+    if(!foundedStoreID) return storeData?.results;
+    
+    const filtered = storeData?.results?.filter(i => i?.id === foundedStoreID)
+
+    if(filtered?.length === 0) {
+      return storeData?.results
+    } else {
+      return filtered
+    }
+  }
+
 
   return (
     <div className={cls['table']}>
       {status === userStatus.OWNER ? 
-        <>
-          {
-            currentIndex === 0 && (
-              <React.Fragment>
-                <div className={cls['table-head']}>
-                  <div className={cls['table-head-checkbox']}>
-                    <span></span>
+        togglers?.toggleFolders 
+          ? <>
+            {
+              currentIndex === 0 && (
+                storeChoosenBy()?.length === 0 ? 
+                  <div className='center-empty'>
+                    <Empty />
                   </div>
-                  <div id={cls['no-hover']} className={cls['table-naming']}>
-                    <span>Наименование магазина</span>
-                  </div>
-                  <div className={cls['table-code']}>
-                    <span>код</span>
-                  </div>
-                  <div className={cls['table-article']}>
-                    <span>Артикул</span>
-                  </div>
-                  <div className={cls['table-changer']}>
-                    <span>Ед. изм.</span>
-                  </div>
-                  <div className={cls['table-price']}>
-                    <span>Цена продажи</span>
-                  </div>
-                  <div className={cls['table-discount']}>
-                    <span>Скидка, %</span>
-                  </div>
-                  <div className={cls['table-rest']}>
-                    <span>Остатки</span>
-                  </div>
-                </div>
-                {storeData?.results?.map(item => (
-                  <div onClick={() => handleShowGroups(item?.id)} key={item.id} className={cls['table-item']}>
-                    <div className={cls['table-head-checkbox']}>
-                      <span></span>
+                  : 
+                  <React.Fragment>
+                    <div className={cls['table-head']}>
+                      <div className={cls['table-head-checkbox']}>
+                        <FaHome onClick={() => setCurrentIndex(0)}/>
+                      </div>
+                      
+                      <div id={cls['no-hover']} className={cls['table-naming']}>
+                        <span>Наименование магазина</span>
+                      </div>
+                      <div className={cls['table-code']}>
+                        <span>код</span>
+                      </div>
+                      <div className={cls['table-article']}>
+                        <span>Артикул</span>
+                      </div>
+                      <div className={cls['table-changer']}>
+                        <span>Ед. изм.</span>
+                      </div>
+                      <div className={cls['table-price']}>
+                        <span>Цена продажи</span>
+                      </div>
+                      <div className={cls['table-discount']}>
+                        <span>Скидка, %</span>
+                      </div>
+                      <div className={cls['table-rest']}>
+                        <span>Остатки</span>
+                      </div>
                     </div>
-                    <div id={cls['item-naming']} className={cls['table-naming']}>
-                      <p><AiOutlineFolder/> {item.name}</p>
+                    {storeChoosenBy()?.map(item => (
+                      <div onClick={() => handleShowGroups(item?.id)} key={item.id} className={cls['table-item']}>
+                        <div className={cls['table-head-checkbox']}>
+                          <span></span>
+                        </div>
+                        <div id={cls['item-naming']} className={cls['table-naming']}>
+                          <p><MdOutlineStorefront /> {item.name}</p>
+                        </div>
+                        <div className={cls['table-code']}>
+                          {item.code_of_good}
+                        </div>
+                        <div className={cls['table-article']}>
+                        </div>
+                        <div className={cls['table-changer']}>
+                        </div>
+                        <div className={cls['table-price']}>
+                        </div>
+                        <div className={cls['table-discount']}>
+                        </div>
+                        <div className={cls['table-store']}>
+                        </div>
+                        <div className={cls['table-rest']}>
+                        </div>
+                      </div>
+                    ))}
+                  </React.Fragment>
+              )
+            }
+
+            {
+              currentIndex === 1 && (
+                showGroups?.length === 0 ? 
+                  <div className='center-empty'>
+                    <Empty />
+                    <button onClick={() => setCurrentIndex(0)}>Назад</button>
+                  </div>
+                  :
+                  <React.Fragment>
+                    <div className={cls['table-head']}>
+                      <div className={cls['table-head-checkbox']}>
+                        <FaHome onClick={() => setCurrentIndex(0)}/>
+                      </div>
+                      <div id={cls['no-hover']} className={cls['table-naming']}>
+                        <span>Наименование групп</span>
+                      </div>
+                      <div className={cls['table-code']}>
+                        <span>код</span>
+                      </div>
+                      <div className={cls['table-article']}>
+                        <span>Артикул</span>
+                      </div>
+                      <div className={cls['table-changer']}>
+                        <span>Ед. изм.</span>
+                      </div>
+                      <div className={cls['table-price']}>
+                        <span>Цена продажи</span>
+                      </div>
+                      <div className={cls['table-discount']}>
+                        <span>Скидка, %</span>
+                      </div>
+                      <div className={cls['table-rest']}>
+                        <span>Остатки</span>
+                      </div>
+                    </div>
+
+                    {
+                      showGroups && showGroups?.map((item) => (
+                        <div onClick={() => handleShowCategories(item?.id)} key={item.id} className={cls['table-item']}>
+                          <div className={cls['table-head-checkbox']}>
+                            <span></span>
+                          </div>
+                          <div id={cls['item-naming']} className={cls['table-naming']}>
+                            <p><AiOutlineFolder/> {item.name}</p>
+                          </div>
+                          <div className={cls['table-code']}>
+                            {item.code_of_good}
+                          </div>
+                          <div className={cls['table-article']}>
+                          </div>
+                          <div className={cls['table-changer']}>
+                          </div>
+                          <div className={cls['table-price']}>
+                          </div>
+                          <div className={cls['table-discount']}>
+                          </div>
+                          <div className={cls['table-store']}>
+                          </div>
+                          <div className={cls['table-rest']}>
+                          </div>
+                        </div>
+                      ))
+                    }
+
+                  </React.Fragment>
+              )
+            }
+
+            {
+              currentIndex === 2 && (
+                showCategories?.length === 0 ? 
+                  <div className='center-empty'>
+                    <Empty />
+                    <button onClick={() => setCurrentIndex(1)}>Назад</button>
+                  </div>
+                  :
+                  <React.Fragment>
+                    <div className={cls['table-head']}>
+                      <div className={cls['table-head-checkbox']}>
+                        <FaHome onClick={() => setCurrentIndex(0)}/>
+                      </div>
+                      <div id={cls['no-hover']} className={cls['table-naming']}>
+                        <span>Наименование категории</span>
+                      </div>
+                      <div className={cls['table-code']}>
+                        <span>код</span>
+                      </div>
+                      <div className={cls['table-article']}>
+                        <span>Артикул</span>
+                      </div>
+                      <div className={cls['table-changer']}>
+                        <span>Ед. изм.</span>
+                      </div>
+                      <div className={cls['table-price']}>
+                        <span>Цена продажи</span>
+                      </div>
+                      <div className={cls['table-discount']}>
+                        <span>Скидка, %</span>
+                      </div>
+                      <div className={cls['table-rest']}>
+                        <span>Остатки</span>
+                      </div>
+                    </div>
+
+                    {
+                      showCategories && showCategories?.map((item) => (
+                        <div onClick={() => handleShowGoods(item?.id)} key={item.id} className={cls['table-item']}>
+                          <div className={cls['table-head-checkbox']}>
+                            <span></span>
+                          </div>
+                          <div id={cls['item-naming']} className={cls['table-naming']}>
+                            <p><AiOutlineFolder/> {item.name}</p>
+                          </div>
+                          <div className={cls['table-code']}>
+                            {item.code_of_good}
+                          </div>
+                          <div className={cls['table-article']}>
+                          </div>
+                          <div className={cls['table-changer']}>
+                          </div>
+                          <div className={cls['table-price']}>
+                          </div>
+                          <div className={cls['table-discount']}>
+                          </div>
+                          <div className={cls['table-store']}>
+                          </div>
+                          <div className={cls['table-rest']}>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </React.Fragment>
+              )
+            }
+
+            {
+              currentIndex === 3 && (
+                showProducts?.length === 0 ?
+                  <div className='center-empty'>
+                    <Empty />
+                    <button onClick={() => setCurrentIndex(2)}>Назад</button>
+                  </div>
+                  :
+                  <React.Fragment>
+                    <div className={cls['table-head']}>
+                      <div className={cls['table-head-checkbox']}>
+                        <FaHome onClick={() => setCurrentIndex(0)}/>
+                      </div>
+                      <div id={cls['no-hover']} className={cls['table-naming']}>
+                        <span>Наименование товара</span>
+                      </div>
+                      <div className={cls['table-code']}>
+                        <span>код</span>
+                      </div>
+                      <div className={cls['table-article']}>
+                        <span>Артикул</span>
+                      </div>
+                      <div className={cls['table-changer']}>
+                        <span>Ед. изм.</span>
+                      </div>
+                      <div className={cls['table-price']}>
+                        <span>Цена продажи</span>
+                      </div>
+                      <div className={cls['table-discount']}>
+                        <span>Скидка, %</span>
+                      </div>
+                      <div className={cls['table-rest']}>
+                        <span>Остатки</span>
+                      </div>
+                    </div>
+
+                    {
+                      showProducts && showProducts?.map((item) => (
+                        <div  key={item.id} className={cls['table-item']}>
+                          <div className={cls['table-head-checkbox']}>
+                            <span></span>
+                          </div>
+                          <div id={cls['item-naming']} className={cls['table-naming']}>
+                            <p>
+                              <img src={item?.image} alt=''/>
+                              {item?.name}
+                            </p>
+                          </div>
+                          <div className={cls['table-code']}>
+                            {item?.code_of_good}
+                          </div>
+                          <div className={cls['table-article']}>
+                            {item?.articul}
+                          </div>
+                          <div className={cls['table-changer']}>
+                            {item?.unit}
+                          </div>
+                          <div className={cls['table-price']}>
+                            {item?.purchase_price}
+                          </div>
+                          <div className={cls['table-discount']}>
+                            {item?.discount}
+                          </div>
+                          <div className={cls['table-store']}>
+
+                          </div>
+                          <div className={cls['table-rest']}>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </React.Fragment>
+              )
+            }
+          </> 
+          : 
+          <React.Fragment>
+            {
+              productData?.length === 0 ?
+                <div className='center-empty'>
+                  <Empty />
+                  <button onClick={() => setCurrentIndex(2)}>Назад</button>
+                </div> :
+                <React.Fragment>
+                  <div className={cls['table-head']}>
+                    <div className={cls['table-head-checkbox']}>
+                      <FaHome onClick={() => setCurrentIndex(0)}/>
+                    </div>
+                    <div id={cls['no-hover']} className={cls['table-naming']}>
+                      <span>Наименование товара</span>
                     </div>
                     <div className={cls['table-code']}>
-                      {item.code_of_good}
+                      <span>код</span>
                     </div>
                     <div className={cls['table-article']}>
+                      <span>Артикул</span>
                     </div>
                     <div className={cls['table-changer']}>
+                      <span>Ед. изм.</span>
                     </div>
                     <div className={cls['table-price']}>
+                      <span>Цена продажи</span>
                     </div>
                     <div className={cls['table-discount']}>
-                    </div>
-                    <div className={cls['table-store']}>
+                      <span>Скидка, %</span>
                     </div>
                     <div className={cls['table-rest']}>
+                      <span>Остатки</span>
                     </div>
                   </div>
-                ))}
-              </React.Fragment>
-            )
-          }
 
-          {
-            currentIndex === 1 && (
-              <React.Fragment>
-                <div className={cls['table-head']}>
-                  <div className={cls['table-head-checkbox']}>
-                    <span></span>
-                  </div>
-                  <div id={cls['no-hover']} className={cls['table-naming']}>
-                    <span>Наименование групп</span>
-                  </div>
-                  <div className={cls['table-code']}>
-                    <span>код</span>
-                  </div>
-                  <div className={cls['table-article']}>
-                    <span>Артикул</span>
-                  </div>
-                  <div className={cls['table-changer']}>
-                    <span>Ед. изм.</span>
-                  </div>
-                  <div className={cls['table-price']}>
-                    <span>Цена продажи</span>
-                  </div>
-                  <div className={cls['table-discount']}>
-                    <span>Скидка, %</span>
-                  </div>
-                  <div className={cls['table-rest']}>
-                    <span>Остатки</span>
-                  </div>
-                </div>
+                  {
+                    productData?.results.length !== 0 && productData?.results?.map((item) => (
+                      <div  key={item.id} className={cls['table-item']}>
+                        <div className={cls['table-head-checkbox']}>
+                          <span></span>
+                        </div>
+                        <div id={cls['item-naming']} className={cls['table-naming']}>
+                          <p>
+                            <img src={item?.image} alt=''/>
+                            {item?.name}
+                          </p>
+                        </div>
+                        <div className={cls['table-code']}>
+                          {item?.code_of_good}
+                        </div>
+                        <div className={cls['table-article']}>
+                          {item?.articul}
+                        </div>
+                        <div className={cls['table-changer']}>
+                          {item?.unit}
+                        </div>
+                        <div className={cls['table-price']}>
+                          {item?.purchase_price}
+                        </div>
+                        <div className={cls['table-discount']}>
+                          {item?.discount}
+                        </div>
+                        <div className={cls['table-store']}>
 
-                {
-                  showGroups && showGroups?.map((item) => (
-                    <div onClick={() => handleShowCategories(item?.id)} key={item.id} className={cls['table-item']}>
-                      <div className={cls['table-head-checkbox']}>
-                        <span></span>
+                        </div>
+                        <div className={cls['table-rest']}>
+                        </div>
                       </div>
-                      <div id={cls['item-naming']} className={cls['table-naming']}>
-                        <p><AiOutlineFolder/> {item.name}</p>
-                      </div>
-                      <div className={cls['table-code']}>
-                        {item.code_of_good}
-                      </div>
-                      <div className={cls['table-article']}>
-                      </div>
-                      <div className={cls['table-changer']}>
-                      </div>
-                      <div className={cls['table-price']}>
-                      </div>
-                      <div className={cls['table-discount']}>
-                      </div>
-                      <div className={cls['table-store']}>
-                      </div>
-                      <div className={cls['table-rest']}>
-                      </div>
-                    </div>
-                  ))
-                }
-
-              </React.Fragment>
-            )
-          }
-
-          {
-            currentIndex === 2 && (
-              <React.Fragment>
-                <div className={cls['table-head']}>
-                  <div className={cls['table-head-checkbox']}>
-                    <span></span>
-                  </div>
-                  <div id={cls['no-hover']} className={cls['table-naming']}>
-                    <span>Наименование категории</span>
-                  </div>
-                  <div className={cls['table-code']}>
-                    <span>код</span>
-                  </div>
-                  <div className={cls['table-article']}>
-                    <span>Артикул</span>
-                  </div>
-                  <div className={cls['table-changer']}>
-                    <span>Ед. изм.</span>
-                  </div>
-                  <div className={cls['table-price']}>
-                    <span>Цена продажи</span>
-                  </div>
-                  <div className={cls['table-discount']}>
-                    <span>Скидка, %</span>
-                  </div>
-                  <div className={cls['table-rest']}>
-                    <span>Остатки</span>
-                  </div>
-                </div>
-
-                {
-                  showCategories && showCategories?.map((item) => (
-                    <div onClick={() => handleShowGoods(item?.id)} key={item.id} className={cls['table-item']}>
-                      <div className={cls['table-head-checkbox']}>
-                        <span></span>
-                      </div>
-                      <div id={cls['item-naming']} className={cls['table-naming']}>
-                        <p><AiOutlineFolder/> {item.name}</p>
-                      </div>
-                      <div className={cls['table-code']}>
-                        {item.code_of_good}
-                      </div>
-                      <div className={cls['table-article']}>
-                      </div>
-                      <div className={cls['table-changer']}>
-                      </div>
-                      <div className={cls['table-price']}>
-                      </div>
-                      <div className={cls['table-discount']}>
-                      </div>
-                      <div className={cls['table-store']}>
-                      </div>
-                      <div className={cls['table-rest']}>
-                      </div>
-                    </div>
-                  ))
-                }
-              </React.Fragment>
-            )
-          }
-
-          {
-            currentIndex === 3 && (
-              <React.Fragment>
-                <div className={cls['table-head']}>
-                  <div className={cls['table-head-checkbox']}>
-                    <span></span>
-                  </div>
-                  <div id={cls['no-hover']} className={cls['table-naming']}>
-                    <span>Наименование товара</span>
-                  </div>
-                  <div className={cls['table-code']}>
-                    <span>код</span>
-                  </div>
-                  <div className={cls['table-article']}>
-                    <span>Артикул</span>
-                  </div>
-                  <div className={cls['table-changer']}>
-                    <span>Ед. изм.</span>
-                  </div>
-                  <div className={cls['table-price']}>
-                    <span>Цена продажи</span>
-                  </div>
-                  <div className={cls['table-discount']}>
-                    <span>Скидка, %</span>
-                  </div>
-                  <div className={cls['table-rest']}>
-                    <span>Остатки</span>
-                  </div>
-                </div>
-
-                {
-                  showProducts && showProducts?.map((item) => (
-                    <div  key={item.id} className={cls['table-item']}>
-                      <div className={cls['table-head-checkbox']}>
-                        <span></span>
-                      </div>
-                      <div id={cls['item-naming']} className={cls['table-naming']}>
-                        <p>
-                          <img src={item?.image} alt=''/>
-                          {item?.name}
-                        </p>
-                      </div>
-                      <div className={cls['table-code']}>
-                        {item?.code_of_good}
-                      </div>
-                      <div className={cls['table-article']}>
-                        {item?.articul}
-                      </div>
-                      <div className={cls['table-changer']}>
-                        {item?.unit}
-                      </div>
-                      <div className={cls['table-price']}>
-                        {item?.purchase_price}
-                      </div>
-                      <div className={cls['table-discount']}>
-                        {item?.discount}
-                      </div>
-                      <div className={cls['table-store']}>
-                        
-                      </div>
-                      <div className={cls['table-rest']}>
-                      </div>
-                    </div>
-                  ))
-                }
-              </React.Fragment>
-            )
-          }
-        </> : <>
+                    ))
+                  }
+                </React.Fragment>
+            }
+          </React.Fragment>
+        : <>
           <div className={cls['table-head']}>
             <div className={cls['table-head-checkbox']}>
               <span></span>
